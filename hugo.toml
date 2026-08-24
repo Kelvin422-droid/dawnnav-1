@@ -1,0 +1,56 @@
+baseURL = "https://dawnnav.pages.dev"
+languageCode = "en-US"
+title = "DawnNav"
+theme = "hugo-webstack" 
+
+#true:允许大写字母url路径，false:将url路径转换成小写
+disablePathToLower = true
+
+#页脚：作者名字
+copyright = "DawnNav"
+
+#网站信息，不显示，仅供搜索引擎参考
+[params]
+  keywords = "黎明导航,DawnNav,Dawn Navigation,左翼导航,左派网站,Marxist Navigation,马克思主义导航,毛主义资源,左翼理论,左翼网站导航,communist resources,socialist theory,左翼,左派,maoism,毛主义,斯大林,列宁,马克思主义,毛泽东,印共毛,马列毛主义,共产主义,社会主义,工人阶级,无产阶级,毛派,communism,革命,马列主义,社会主义理论,政治经济学,辩证唯物主义,历史唯物主义,阶级斗争,人民战争,文化大革命,第三世界,反帝国主义,马克思,恩格斯,托洛茨基,切·格瓦拉,卡斯特罗,胡志明,金日成,马克思列宁主义,社会主义革命,无产阶级革命,工人运动,农民运动,学生运动,社会运动,工会运动,阶级意识,革命理论,游击战争,社会主义建设,社会主义经济,计划经济,公有制,集体所有制,国有化,工人国家,无产阶级专政,社会主义民主,人民战争,群众路线,林彪,江青,陈伯达,王洪文,霍查,张春桥,卢森堡,苏维埃"
+  description = "黎明导航(DawnNav)是专注于马克思主义、当代毛泽东思想、毛主义和当代左翼理论的在线网站导航平台。DawnNav is an online navigation platform focused on Marxism, contemporary Mao Zedong Thought, Maoism and contemporary left-wing theory, providing rich Marxist-Leninist-Maoist literature websites and socialist theoretical research materials."
+  author = "DawnNav"
+  since = "2022"
+  beian = ""
+  [params.opengraph]
+    enable = true
+    locale = "zh_CN"
+    sitename = "黎明导航 | DawnNav"
+  [params.twitter]
+    enable = true
+    card = "summary_large_image"
+  [params.schema]
+    enable = true
+    type = "WebSite"
+
+#是否开启搜索栏，true开启，false关闭
+[params.search]
+  enable = false
+
+#设置默认模式，true暗色模式，false亮色模式 
+[params.darkmode]
+  enable = false
+
+#主页菜单栏显示在线编辑按钮（编辑github文件，适用于自动化部署的情况）
+[params.edit]
+  # true显示按钮，false不显示
+  enable = false
+  # github文件的远程链接，改成自己的
+  url = "https://github.com/DawnNav/home/blob/main/data/webstack.yml"
+  
+#桌面端右上角code按钮
+[params.github]
+  enable = false #true显示 false隐藏
+  url = ""
+  
+[permalinks]  
+  404 = "/404.html"
+
+#是否对本地搜索功能开启拼音匹配，true开启，false禁止。
+#拼音库体积337k，支持首字母匹配
+[params.pinyin]
+  enable = true

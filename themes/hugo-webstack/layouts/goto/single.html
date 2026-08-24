@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>{{ if eq .Lang "en" }}Redirecting - {{ else }}正在跳转 - {{ end }}{{ .Site.Title }}</title>
+<meta name="theme-color" content="#2C2E2F" />
+<meta name="keywords" content="{{ .Site.Params.keywords }}">
+<meta name="description" content="{{ .Site.Params.description }}">
+<link rel="shortcut icon" href="../images/app-ico.png">
+<link rel="apple-touch-icon" href="../images/app-ico.png">
+<link rel='stylesheet' id='font-awesome-css'  href='../css/font-awesome.min.css?ver=6.5.1' type='text/css' media='all' />
+<link rel='stylesheet' id='bootstrap-css'  href='../css/bootstrap.css?ver=3.4.1' type='text/css' media='all' />
+<style type="text/css">
+    body {
+        background-color: #f4f6f9;
+        font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.5;
+    }
+    .dark-mode {
+        background-color: #26282a;
+        color: #ddd;
+    }
+    .goto-container {
+        max-width: 700px;
+        width: 100%;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.12);
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    .dark-mode .goto-container {
+        background-color: #32353a;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+    }
+    .site-header {
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .dark-mode .site-header {
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .site-logo {
+        margin-bottom: 10px;
+        max-width: 120px; 
+        height: auto;
+    }
+    .site-name {
+        font-size: 20px; 
+        font-weight: 600;
+        margin: 0;
+        color: #333;
+    }
+    .dark-mode .site-name {
+        color: #fff;
+    }
+    .target-card {
+        display: flex;
+        flex-direction: column;
+        margin: 30px 0;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+    .dark-mode .target-card {
+        background-color: #3a3d42;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    }
+    .target-header {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .dark-mode .target-header {
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .target-logo {
+        width: 64px;
+        height: 64px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        object-fit: contain;
+        background-color: #fff;
+        padding: 2px;
+        margin-right: 15px;
+    }
+    .dark-mode .target-logo {
+        background-color: #484b50;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .target-title-area {
+        flex: 1;
+        text-align: left;
+    }
+    .target-title {
+        font-weight: 600;
+        margin: 0 0 5px;
+        font-size: 20px;
+        color: #333;
+    }
+    .dark-mode .target-title {
+        color: #eee;
+    }
+    .target-url {
+        word-break: break-all;
+        margin: 0;
+        font-size: 14px;
+        color: #4285f4;
+    }
+    .dark-mode .target-url {
+        color: #5f9cf9;
+    }
+    .target-details {
+        padding: 20px;
+        text-align: left;
+    }
+    .target-description {
+        margin: 0;
+        color: #555;
+        font-size: 15px;
+        line-height: 1.6;
+    }
+    .dark-mode .target-description {
+        color: #bbb;
+    }
+    .timer-section {
+        margin: 25px 0;
+        padding-top: 10px;
+    }
+    .progress-container {
+        margin: 20px 0;
+        background-color: #e0e0e0;
+        border-radius: 4px;
+        position: relative;
+        height: 6px;
+        overflow: hidden;
+    }
+    .dark-mode .progress-container {
+        background-color: #555;
+    }
+    .progress-bar {
+        position: absolute;
+        height: 100%;
+        background-color: #4285f4;
+        transition: width 60s linear;
+        width: 0%;
+    }
+    .countdown {
+        font-size: 16px;
+        color: #666;
+        margin: 15px 0;
+    }
+    .dark-mode .countdown {
+        color: #aaa;
+    }
+    .countdown-time {
+        font-weight: 600;
+        color: #4285f4;
+    }
+    .dark-mode .countdown-time {
+        color: #5f9cf9;
+    }
+    .button-group {
+        display: flex;
+        justify-content: center;
+        margin-top: 25px;
+        gap: 15px;
+    }
+    .btn {
+        padding: 10px 24px;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn i {
+        margin-right: 6px;
+    }
+    .btn-primary {
+        background-color: #4285f4;
+        color: white;
+        border: none;
+    }
+    .btn-primary:hover {
+        background-color: #3367d6;
+        transform: translateY(-1px);
+    }
+    .btn-secondary {
+        background-color: #f8f9fa;
+        color: #3c4043;
+        border: 1px solid #dadce0;
+    }
+    .dark-mode .btn-secondary {
+        background-color: #484b50;
+        color: #ddd;
+        border: 1px solid #666;
+    }
+    .btn-secondary:hover {
+        background-color: #f1f3f4;
+        box-shadow: 0 1px 2px rgba(60, 64, 67, 0.1);
+        transform: translateY(-1px);
+    }
+    .dark-mode .btn-secondary:hover {
+        background-color: #52565b;
+    }
+    .safety-notice {
+        margin-top: 30px;
+        padding: 15px;
+        background-color: rgba(66, 133, 244, 0.05);
+        border-radius: 6px;
+        font-size: 13px;
+        color: #666;
+    }
+    .dark-mode .safety-notice {
+        background-color: rgba(95, 156, 249, 0.05);
+        color: #999;
+    }
+    .safety-notice p {
+        margin: 0;
+    }
+    .safety-notice p + p {
+        margin-top: 8px;
+    }
+    .copyright {
+        margin-top: 30px;
+        font-size: 12px;
+        color: #999;
+    }
+    .dark-mode .copyright {
+        color: #777;
+    }
+    .loading-spinner {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        border: 3px solid rgba(66, 133, 244, 0.2);
+        border-radius: 50%;
+        border-top-color: #4285f4;
+        animation: spin 1s ease-in-out infinite;
+        margin: 0 auto 20px;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    .loader-text {
+        color: #666;
+        font-size: 14px;
+    }
+    .dark-mode .loader-text {
+        color: #999;
+    }
+    .content-loader {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+    }
+    .action-notice {
+        margin-top: 5px;
+        font-size: 12px;
+        color: #888;
+    }
+    .dark-mode .action-notice {
+        color: #777;
+    }
+    .info-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        background-color: #4285f4;
+        color: white;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 500;
+        margin-left: 10px;
+        vertical-align: middle;
+    }
+    .dark-mode .info-badge {
+        background-color: #5f9cf9;
+    }
+</style>
+</head>
+<body class="{{ if .Site.Params.darkmode.enable }}dark-mode{{ end }}">
+    <div class="goto-container">
+        <div class="site-header">
+            <img class="site-logo" src="../images/logo.png" alt="{{ .Site.Title }}">
+            <h1 class="site-name">{{ .Site.Title }}</h1>
+        </div>
+        
+        <div id="target-content" style="display: none;">
+            <div class="target-card">
+                <div class="target-header">
+                    <img id="target-logo" class="target-logo" src="../images/favicon.png" alt="网站图标">
+                    <div class="target-title-area">
+                        <h2 id="target-title" class="target-title">外部网站</h2>
+                        <p id="target-url" class="target-url">加载中...</p>
+                    </div>
+                </div>
+                <div class="target-details">
+                    <p id="target-description" class="target-description">正在加载网站信息...</p>
+                </div>
+            </div>
+            
+            <div class="timer-section">
+                <div class="countdown">
+                    {{ if eq .Lang "en" }}This page will automatically redirect in <span class="countdown-time"><span id="minutes">1</span>:<span id="seconds">00</span></span>.{{ else }}页面将在 <span class="countdown-time"><span id="minutes">1</span>:<span id="seconds">00</span></span> 后自动跳转{{ end }}
+                </div>
+                <div class="action-notice">
+                    {{ if eq .Lang "en" }}You can also click the button below to go immediately.{{ else }}您也可以点击下方按钮立即前往{{ end }}
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                
+                <div class="button-group">
+                    <a href="javascript:void(0);" id="go-button" class="btn btn-primary">
+                        <i class="fa fa-external-link" aria-hidden="true"></i>Go Now
+                    </a>
+                    <a href="javascript:void(0);" id="back-button" class="btn btn-secondary">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>‌Return
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div id="loading-content" class="content-loader">
+            <div class="loading-spinner"></div>
+            <p class="loader-text">
+                {{ if eq .Lang "en" }}Loading website information...{{ else }}正在获取网站信息...{{ end }}
+            </p>
+        </div>
+        
+        <div class="safety-notice">
+            <p><i class="fa fa-info-circle" aria-hidden="true"></i>
+                {{ if eq .Lang "en" }}You are about to leave "{{ .Site.Title }}". The content you are visiting is provided by a third party.{{ else }}您即将离开"{{ .Site.Title }}"，访问的网页由第三方提供{{ end }}
+            </p>
+            <p>本站不对其内容负责，请注意您的账号和隐私安全</p>
+        </div>
+        
+        <div class="copyright">
+            Copyright © {{ now.Format "2006"}} <strong>{{ if .Site.Copyright }}{{ .Site.Copyright | safeHTML }}{{ else }}{{ .Site.Title }}{{ end }}</strong>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化倒计时时间（60秒）
+            var totalSeconds = 60;
+            var minutes = Math.floor(totalSeconds / 60);
+            var seconds = totalSeconds % 60;
+            
+            var minutesEl = document.getElementById('minutes');
+            var secondsEl = document.getElementById('seconds');
+            var progressBar = document.getElementById('progress-bar');
+            var targetTitleEl = document.getElementById('target-title');
+            var targetUrlEl = document.getElementById('target-url');
+            var targetLogoEl = document.getElementById('target-logo');
+            var targetDescEl = document.getElementById('target-description');
+            var goButtonEl = document.getElementById('go-button');
+            var targetContent = document.getElementById('target-content');
+            var loadingContent = document.getElementById('loading-content');
+            
+            // 获取URL中的参数
+            function getParameterByName(name) {
+                var url = window.location.href;
+                name = name.replace(/[\[\]]/g, '\\$&');
+                var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
+            
+            // 获取网站favicon的函数
+            function getFaviconUrl(domain) {
+                return `https://favicon.is-an.org/?domain=${domain}&sz=64`;
+            }
+            
+            // 提取域名
+            function extractDomain(url) {
+                if (!url) return '';
+                try {
+                    // 移除协议部分
+                    var domain = url.replace(/^https?:\/\//, '');
+                    // 移除路径部分
+                    domain = domain.split('/')[0];
+                    return domain;
+                } catch (e) {
+                    console.error('提取域名出错:', e);
+                    return '';
+                }
+            }
+            
+            // 从localStorage获取目标信息
+            var gotoId = getParameterByName('id');
+            var targetData = null;
+            var targetURL = "{{ .Params.targetURL }}";
+            var targetDomain = '';
+            
+            if (gotoId) {
+                var storedData = localStorage.getItem('goto_' + gotoId);
+                if (storedData) {
+                    try {
+                        targetData = JSON.parse(storedData);
+                        localStorage.removeItem('goto_' + gotoId); // 使用后立即清除数据
+                        
+                        if (targetData.targetURL) {
+                            targetURL = targetData.targetURL;
+                            targetDomain = extractDomain(targetURL);
+                            targetUrlEl.textContent = targetURL;
+                            goButtonEl.href = targetURL;
+                            
+                            // 获取网站图标
+                            if (targetDomain) {
+                                var iconUrl = getFaviconUrl(targetDomain);
+                                targetLogoEl.src = iconUrl;
+                                targetLogoEl.onerror = function() {
+                                    targetLogoEl.src = '../images/favicon.png';
+                                };
+                            }
+                            
+                            // 更新标题
+                            if (targetData.title) {
+                                targetTitleEl.textContent = targetData.title;
+                                document.title = '正在跳转到 ' + targetData.title + ' - {{ .Site.Title }}';
+                            }
+                            
+                            // 更新描述
+                            if (targetData.description) {
+                                targetDescEl.textContent = targetData.description;
+                            } else {
+                                // 尝试爬取目标网站的描述
+                                fetchWebsiteDescription(targetURL);
+                            }
+                            
+                            // 显示目标内容
+                            targetContent.style.display = 'block';
+                            loadingContent.style.display = 'none';
+                        }
+                    } catch (e) {
+                        console.error('解析跳转数据出错:', e);
+                    }
+                }
+            } 
+            
+            // 回退到页面上指定的URL或默认值
+            if (!targetURL || targetURL === "加载中...") {
+                targetURL = "{{ if .Params.targetURL }}{{ .Params.targetURL }}{{ else }}javascript:history.back();{{ end }}";
+                if (targetURL === "javascript:history.back();") {
+                    setTimeout(function() {
+                        history.back();
+                    }, 100);
+                    return;
+                }
+                
+                targetDomain = extractDomain(targetURL);
+                
+                // 更新UI
+                targetUrlEl.textContent = targetURL;
+                goButtonEl.href = targetURL;
+                
+                // 获取网站图标
+                if (targetDomain) {
+                    var iconUrl = getFaviconUrl(targetDomain);
+                    targetLogoEl.src = iconUrl;
+                    targetLogoEl.onerror = function() {
+                        targetLogoEl.src = '../images/favicon.png';
+                    };
+                }
+                
+                // 尝试爬取目标网站的描述
+                fetchWebsiteDescription(targetURL);
+                
+                // 显示目标内容
+                targetContent.style.display = 'block';
+                loadingContent.style.display = 'none';
+            }
+            
+            // 尝试获取网站的描述
+            function fetchWebsiteDescription(url) {
+                // 使用fetch API获取网站内容
+                fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(url))
+                    .then(response => {
+                        if (response.ok) return response.json();
+                        throw new Error('Network response was not ok.');
+                    })
+                    .then(data => {
+                        if (data && data.contents) {
+                            // 从HTML中提取描述
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(data.contents, 'text/html');
+                            
+                            // 尝试获取meta description
+                            const metaDesc = doc.querySelector('meta[name="description"]');
+                            if (metaDesc && metaDesc.getAttribute('content')) {
+                                targetDescEl.textContent = metaDesc.getAttribute('content');
+                                return;
+                            }
+                            
+                            // 尝试获取Open Graph描述
+                            const ogDesc = doc.querySelector('meta[property="og:description"]');
+                            if (ogDesc && ogDesc.getAttribute('content')) {
+                                targetDescEl.textContent = ogDesc.getAttribute('content');
+                                return;
+                            }
+                            
+                            // 如果没有描述，尝试使用网站标题
+                            const title = doc.querySelector('title');
+                            if (title && title.textContent) {
+                                if (!targetData || !targetData.title) {
+                                    targetTitleEl.textContent = title.textContent;
+                                    document.title = '正在跳转到 ' + title.textContent + ' - {{ .Site.Title }}';
+                                }
+                                
+                                const h1 = doc.querySelector('h1');
+                                if (h1 && h1.textContent) {
+                                    targetDescEl.textContent = h1.textContent;
+                                } else {
+                                    targetDescEl.textContent = "这是一个关于 " + title.textContent + " 的网站";
+                                }
+                                return;
+                            }
+                            
+                            // 默认描述
+                            targetDescEl.textContent = "正在跳转至该网站，请稍候...";
+                            
+                        } else {
+                            throw new Error('Invalid data structure');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('获取网站描述出错:', error);
+                        targetDescEl.textContent = "正在跳转至该网站，请稍候...";
+                    });
+            }
+            
+            // 启动进度条动画
+            setTimeout(function() {
+                progressBar.style.width = '100%';
+            }, 100);
+            
+            // 格式化时间为两位数
+            function formatTimeDigit(num) {
+                return num < 10 ? '0' + num : num;
+            }
+            
+            // 倒计时
+            var countdownInterval = setInterval(function() {
+                totalSeconds -= 1;
+                
+                minutes = Math.floor(totalSeconds / 60);
+                seconds = totalSeconds % 60;
+                
+                minutesEl.textContent = minutes;
+                secondsEl.textContent = formatTimeDigit(seconds);
+                
+                if (totalSeconds <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = targetURL;
+                }
+            }, 1000);
+            
+            // 立即前往按钮点击事件
+            goButtonEl.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = targetURL;
+            });
+            
+            // 返回按钮点击事件
+            document.getElementById('back-button').addEventListener('click', function() {
+                if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    window.close();
+                }
+            });
+            
+            // 检测暗黑模式偏好
+            function checkDarkMode() {
+                if (localStorage.getItem('darkMode') === 'true' || 
+                   (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && localStorage.getItem('darkMode') !== 'false') || 
+                   document.body.classList.contains('dark-mode')) {
+                    document.body.classList.add('dark-mode');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                }
+            }
+            
+            // 初次检查暗黑模式
+            checkDarkMode();
+        });
+    </script>
+</body>
+</html>

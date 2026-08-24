@@ -1,0 +1,11 @@
+storage/*.db
+storage/*.db-shm
+storage/*.db-wal
+.env
+dist/
+node_modules/
+.wrangler/
+app/_generated/
+.next/
+.vinext/
+*.tsbuildinfo
